@@ -1,0 +1,7 @@
+{
+  "name": "WeatherWise AI",
+  "description": "An intelligent weather aggregator that compares multiple sources and uses Gemini AI to predict the most accurate forecast.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
