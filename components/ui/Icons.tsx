@@ -19,6 +19,12 @@ export const SunIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
+export const MoonIcon = ({ className }: { className?: string }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+  </svg>
+);
+
 export const CloudIcon = ({ className }: { className?: string }) => (
   <svg xmlns="http://www.w3.org/2000/svg" className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
@@ -32,15 +38,63 @@ export const RainIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
+export const StormIcon = ({ className }: { className?: string }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 13l-3 5h3l-2 4" />
+  </svg>
+);
+
+export const SnowIcon = ({ className }: { className?: string }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 18v3m4-3v3m4-3v3M8 19.5l-1 1m1-1l1 1m3-1l-1 1m1-1l1 1m3-1l-1 1m1-1l1 1" />
+  </svg>
+);
+
+export const FogIcon = ({ className }: { className?: string }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h13M3 14h18M6 18h12" />
+  </svg>
+);
+
 export const WindIcon = ({ className }: { className?: string }) => (
   <svg xmlns="http://www.w3.org/2000/svg" className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
   </svg>
 );
 
-export const getWeatherIcon = (condition: string, className: string = "w-6 h-6") => {
-  const c = condition.toLowerCase();
-  if (c.includes('rain') || c.includes('storm')) return <RainIcon className={className} />;
+export const DropletIcon = ({ className }: { className?: string }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 2.69l5.66 5.66a8 8 0 11-11.31 0z" />
+  </svg>
+);
+
+export const ThermometerIcon = ({ className }: { className?: string }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 13.5V4a2 2 0 114 0v9.5a4 4 0 11-4 0z" />
+  </svg>
+);
+
+export const SparklesIcon = ({ className }: { className?: string }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 10l-5.714 2.143L13 19l-2.286-6.857L5 10l5.714-2.143L13 1z" />
+  </svg>
+);
+
+export const SunMoonIcon = ({ className }: { className?: string }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <circle cx="12" cy="12" r="4" strokeWidth={2} />
+    <path strokeLinecap="round" strokeWidth={2} d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
+  </svg>
+);
+
+export const getWeatherIcon = (condition: string, className: string = "w-6 h-6", isDaytime: boolean = true) => {
+  const c = (condition || '').toLowerCase();
+  if (c.includes('storm') || c.includes('thunder')) return <StormIcon className={className} />;
+  if (c.includes('snow')) return <SnowIcon className={className} />;
+  if (c.includes('rain') || c.includes('shower') || c.includes('drizzle')) return <RainIcon className={className} />;
+  if (c.includes('fog') || c.includes('mist') || c.includes('haze')) return <FogIcon className={className} />;
   if (c.includes('cloud') || c.includes('overcast')) return <CloudIcon className={className} />;
-  return <SunIcon className={className} />;
+  return isDaytime ? <SunIcon className={className} /> : <MoonIcon className={className} />;
 };

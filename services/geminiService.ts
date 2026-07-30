@@ -1,26 +1,29 @@
 import { GoogleGenAI } from "@google/genai";
 import { WeatherReport } from "../types";
+import { generateDemoReport } from "./mockData";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+const API_KEY = process.env.API_KEY;
+const ai = API_KEY ? new GoogleGenAI({ apiKey: API_KEY }) : null;
 
 const SYSTEM_INSTRUCTION = `
 You are WeatherWise AI, an advanced meteorological aggregator.
 Your goal is to provide the most accurate weather forecast by analyzing multiple sources.
-You must output strictly valid JSON.
+You must output strictly valid JSON, and nothing else.
 `;
 
-export const fetchWeatherReport = async (location: string): Promise<WeatherReport> => {
-  const prompt = `
+const buildPrompt = (location: string) => `
     1. Search for the current weather forecast for "${location}" from three distinct sources: OpenWeatherMap, WeatherAPI, and AccuWeather.
-    2. Get current Temperature (Celsius), Condition (e.g., Sunny, Rainy), Humidity (%), and Wind Speed (km/h).
+    2. Get current Temperature (Celsius), Condition (e.g., Sunny, Rainy), Humidity (%), Wind Speed (km/h), and whether it is currently daytime or nighttime at that location.
     3. Analyze the data. If there are discrepancies, use your knowledge of regional provider accuracy to determine the "Best Forecast" (consensus).
     4. Assign a "confidenceScore" (0-100) to each source based on how close they are to the consensus and general reputation.
-    5. Generate a "accuracyHistory" array for the past 7 days (Days: Mon, Tue, Wed, etc.) with SIMULATED historical accuracy scores (0-100) for each of the 3 sources to visualize trends.
-    6. Provide a short "reasoning" for why the Best Forecast was chosen.
+    5. Generate an "accuracyHistory" array for the past 7 days (Days: Mon, Tue, Wed, etc.) with SIMULATED historical accuracy scores (0-100) for each of the 3 sources to visualize trends.
+    6. Generate a "dailyForecast" array with 5 entries (starting with "Today", then the next 4 day abbreviations) containing forecasted high/low temps (Celsius), a condition, and precipitation chance (0-100).
+    7. Provide a short "reasoning" for why the Best Forecast was chosen.
 
-    Return the result as a raw JSON object (no markdown formatting, no backticks) with this structure:
+    Return the result as a raw JSON object (no markdown formatting, no backticks) with this exact structure:
     {
       "location": "City, Country",
+      "isDaytime": boolean,
       "bestForecast": {
         "snapshot": { "temp": number, "condition": string, "humidity": number, "windSpeed": number, "unit": "C" },
         "summary": "Short description like 'Partly cloudy with gentle breeze'",
@@ -33,14 +36,26 @@ export const fetchWeatherReport = async (location: string): Promise<WeatherRepor
         { "day": "Mon", "OpenWeatherMap": 85, "WeatherAPI": 88, "AccuWeather": 82 },
         ... (for 7 days)
       ],
+      "dailyForecast": [
+        { "day": "Today", "high": number, "low": number, "condition": string, "precipitationChance": number },
+        ... (for 5 days)
+      ],
       "lastUpdated": "${new Date().toISOString()}"
     }
   `;
 
+export const fetchWeatherReport = async (location: string): Promise<WeatherReport> => {
+  if (!ai) {
+    // No API key configured — fall back to realistic simulated data so the
+    // UI is still fully explorable in local/demo environments.
+    await new Promise((r) => setTimeout(r, 600));
+    return generateDemoReport(location);
+  }
+
   try {
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash',
-      contents: prompt,
+      contents: buildPrompt(location),
       config: {
         systemInstruction: SYSTEM_INSTRUCTION,
         tools: [{ googleSearch: {} }],
@@ -50,10 +65,10 @@ export const fetchWeatherReport = async (location: string): Promise<WeatherRepor
     });
 
     const text = response.text || "";
-    
+
     // Clean up potential markdown code blocks
     const jsonString = text.replace(/```json/g, '').replace(/```/g, '').trim();
-    
+
     try {
       const data: WeatherReport = JSON.parse(jsonString);
       return data;

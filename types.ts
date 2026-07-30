@@ -1,9 +1,11 @@
+export type Unit = 'C' | 'F';
+
 export interface WeatherSnapshot {
   temp: number;
   condition: string;
   humidity: number;
   windSpeed: number;
-  unit: 'C' | 'F';
+  unit: 'C';
 }
 
 export interface WeatherSource {
@@ -17,8 +19,17 @@ export interface HistoricalAccuracyPoint {
   [key: string]: number | string; // Allows dynamic source names mapped to scores
 }
 
+export interface DailyForecastPoint {
+  day: string;
+  high: number;
+  low: number;
+  condition: string;
+  precipitationChance: number; // 0-100
+}
+
 export interface WeatherReport {
   location: string;
+  isDaytime: boolean;
   bestForecast: {
     snapshot: WeatherSnapshot;
     summary: string;
@@ -26,7 +37,9 @@ export interface WeatherReport {
   };
   sources: WeatherSource[];
   accuracyHistory: HistoricalAccuracyPoint[];
+  dailyForecast: DailyForecastPoint[];
   lastUpdated: string;
+  isDemo?: boolean;
 }
 
 export enum WeatherCondition {

@@ -5,12 +5,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>WeatherWise AI</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+      };
+    </script>
     <style>
+      html {
+        transition: background-color 0.6s ease;
+      }
       body {
         font-family: 'Inter', sans-serif;
-        background: linear-gradient(135deg, #f0f9ff 0%, #cbebff 100%);
         min-height: 100vh;
+      }
+
+      @keyframes fade-in-up {
+        from { opacity: 0; transform: translateY(16px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .animate-fade-in-up {
+        animation: fade-in-up 0.5s ease-out both;
+      }
+
+      @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-8px); }
+      }
+      .animate-float {
+        animation: float 4s ease-in-out infinite;
+      }
+
+      ::-webkit-scrollbar {
+        height: 6px;
+        width: 6px;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: rgba(148, 163, 184, 0.5);
+        border-radius: 999px;
       }
     </style>
   <script type="importmap">
@@ -25,7 +57,8 @@
 }
 </script>
 </head>
-  <body>
+  <body class="bg-sky-50 dark:bg-slate-950">
     <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
   </body>
 </html>
